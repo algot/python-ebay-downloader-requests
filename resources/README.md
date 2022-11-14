@@ -1,0 +1,1 @@
+# Directory for input *.html files and for downloaded images
