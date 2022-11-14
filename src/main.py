@@ -10,8 +10,8 @@ def main(input_filename):
 
     for url in items_urls:
         item_page = ItemPage(url)
-        item_page.get_image_urls()
-    pass
+        urls = item_page.get_image_urls()
+        pass
 
 
 if __name__ == '__main__':
@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # filename = '2022.09.24-5452graham-003.html'  # 3
     # filename = '2022.11.05-aherl-1-240.html'  # 240
-    filename = '2022.11.05-xroads13-01-240.html'  # 60
-    # filename = '2022.11.12-carbooks0947-008.html'  # 8
+    # filename = '2022.11.05-xroads13-01-240.html'  # 60
+    filename = '2022.11.12-carbooks0947-008.html'  # 8
 
     main(filename)
