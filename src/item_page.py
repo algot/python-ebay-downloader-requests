@@ -69,9 +69,9 @@ class ItemPage:
         split_lines = self.page_content.splitlines()
         line_with_images = [x for x in split_lines if '<img id="icImg"' in x and '<noscript>' not in x]
         if len(line_with_images) > 0:
-            preview_regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
-            image_preview_urls = preview_regex.findall(line_with_images[0])
-            if len(image_preview_urls) > 0:
-                result = [re.sub('(-l.*).(jpg|png)', '-l1600.jpg', x) for x in image_preview_urls]
+            preview_regex = re.compile('src=\"(.*?)\"')
+            image_url = preview_regex.search(line_with_images[0]).group(1)
+            if image_url:
+                result.append(re.sub('(-l.*).(jpg|png)', '-l1600.jpg', image_url))
 
         return result
