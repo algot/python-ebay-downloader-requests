@@ -1,4 +1,5 @@
 import re
+from time import sleep
 
 import requests
 
@@ -6,8 +7,8 @@ import requests
 class ItemPage:
     def __init__(self, item_url):
         self.item_url = item_url
-        self.page_content = self._get_page_content()
         self.item_id = self._get_item_id()
+        self.page_content = self._get_page_content()
         self.item_title = self._get_item_title()
         self.images_urls = []
         self.item_images = {self.item_id: []}
@@ -17,7 +18,10 @@ class ItemPage:
         self.images_urls = regex.findall(self.page_content)
 
         if len(self.images_urls) == 0:
-            self.images_urls = self._get_images_for_porsche_case()
+            self.images_urls = self._get_images_case_with_one_active_photo()
+
+        if len(self.images_urls) == 0:
+            self.images_urls = self._get_images_for_ended_items()
 
         print(f'Number of images on {self.item_id} = {len(self.images_urls)}')
 
@@ -31,16 +35,14 @@ class ItemPage:
         return self.item_url.split('/')[-1]
 
     def _get_page_content(self):
-        with requests.get(url=self.item_url) as r:
-            return r.text
+        print(f'Loading item {self.item_id}')
+        sleep(2)
 
-    def _get_images_for_porsche_case(self):
-        split_lines = self.page_content.splitlines()
-        line_with_images = [x for x in split_lines if 'mainImgHldr' in x]
-        preview_regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
-        image_preview_urls = preview_regex.findall(line_with_images[0])
-
-        return [re.sub('(-l.*).(jpg|png)', '-l1600.jpg', x) for x in image_preview_urls]
+        try:
+            with requests.get(self.item_url) as r:
+                return r.text
+        except Exception as err:
+            print(err)
 
     def _get_item_title(self):
         title = re.search('<title>(.*)</title>', self.page_content).group(1)
@@ -49,3 +51,27 @@ class ItemPage:
         s = re.sub(r'(?u)[^-\w.]', '', s)
         s = s.replace('__', '_')
         return s.lower()
+
+    def _get_images_case_with_one_active_photo(self):
+        result = []
+        split_lines = self.page_content.splitlines()
+        line_with_images = [x for x in split_lines if 'mainImgHldr' in x]
+        if len(line_with_images) > 0:
+            preview_regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
+            image_preview_urls = preview_regex.findall(line_with_images[0])
+            if len(image_preview_urls) > 0:
+                result = [re.sub('(-l.*).(jpg|png)', '-l1600.jpg', x) for x in image_preview_urls]
+
+        return result
+
+    def _get_images_for_ended_items(self):
+        result = []
+        split_lines = self.page_content.splitlines()
+        line_with_images = [x for x in split_lines if '<img id="icImg"' in x and '<noscript>' not in x]
+        if len(line_with_images) > 0:
+            preview_regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
+            image_preview_urls = preview_regex.findall(line_with_images[0])
+            if len(image_preview_urls) > 0:
+                result = [re.sub('(-l.*).(jpg|png)', '-l1600.jpg', x) for x in image_preview_urls]
+
+        return result
