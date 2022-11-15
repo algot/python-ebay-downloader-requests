@@ -36,7 +36,7 @@ class ItemPage:
 
     def _get_page_content(self):
         print(f'Loading item {self.item_id}')
-        sleep(2)
+        sleep(1)
 
         try:
             with requests.get(self.item_url) as r:
