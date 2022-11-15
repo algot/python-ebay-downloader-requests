@@ -1,5 +1,7 @@
 import sys
 
+from alive_progress import alive_bar
+
 from index_page import IndexPage
 from item_page import ItemPage
 from downloader import download
@@ -7,7 +9,14 @@ from downloader import download
 
 def main(input_filename):
     items_urls = IndexPage(input_filename).get_list_of_item_urls_from_index_page()
-    files_to_download = [ItemPage(url).get_image_urls() for url in items_urls]
+
+    files_to_download = []
+    with alive_bar(len(items_urls), title='Get image urls', spinner='dots') as bar:
+        for url in items_urls:
+            item_page = ItemPage(url)
+            files_to_download.append(item_page.get_image_urls())
+            bar()
+
     download(input_filename, files_to_download)
 
 
