@@ -13,7 +13,7 @@ class ItemPage:
         self.images_urls = []
         self.item_images = {self.item_id: []}
 
-    def get_image_urls(self):
+    def get_image_urls(self, count):
         regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l1600.jpg')
         self.images_urls = regex.findall(self.page_content)
 
@@ -26,7 +26,7 @@ class ItemPage:
         print(f'Number of images on {self.item_id} = {len(self.images_urls)}')
 
         for i, url in enumerate(self.images_urls):
-            image_filename = f'{self.item_id}_{self.item_title}_{i + 1}.jpg'
+            image_filename = f'{count + 1}_{self.item_id}_{self.item_title}_{i + 1}.jpg'
             self.item_images[self.item_id].append((image_filename, url))
 
         return self.item_images

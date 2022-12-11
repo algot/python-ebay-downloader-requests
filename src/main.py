@@ -12,9 +12,9 @@ def main(input_filename):
 
     files_to_download = []
     with alive_bar(len(items_urls), title='Get image urls', spinner='dots') as bar:
-        for url in items_urls:
+        for count, url in enumerate(items_urls):
             item_page = ItemPage(url)
-            files_to_download.append(item_page.get_image_urls())
+            files_to_download.append(item_page.get_image_urls(count))
             bar()
 
     download(input_filename, files_to_download)

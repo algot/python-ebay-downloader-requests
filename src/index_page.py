@@ -19,7 +19,7 @@ class IndexPage:
 
         regex = re.compile('https:\/\/\S*\/itm/\S{12}')
 
-        item_urls = set(regex.findall(self.page_content))
+        item_urls = list(dict.fromkeys(regex.findall(self.page_content)))  # remove duplicates preserving orders
         items_urls_cleaned = [i for i in item_urls if '12345' not in i]
 
         print(f'Numbers of items found: {len(items_urls_cleaned)}')
