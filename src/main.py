@@ -21,6 +21,8 @@ def main(input_filename):
 
 
 if __name__ == '__main__':
-    filename = (sys.argv[1])
-
+    try:
+        filename = (sys.argv[1])
+    except IndexError:
+        print('You forgot to specify filename to process. Please try again.')
     main(filename)
