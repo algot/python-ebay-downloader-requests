@@ -1,3 +1,4 @@
+import json
 import re
 from time import sleep
 
@@ -59,7 +60,7 @@ class ItemPage:
         if len(line_with_images) > 0:
             preview_regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
             image_preview_urls = preview_regex.findall(line_with_images[0])
-            if len(image_preview_urls) > 0:
+            if image_preview_urls:
                 result = [re.sub('(-l.*).(jpg|png)', '-l1600.jpg', x) for x in image_preview_urls]
 
         return result
@@ -67,11 +68,12 @@ class ItemPage:
     def _get_images_for_ended_items(self):
         result = []
         split_lines = self.page_content.splitlines()
-        line_with_images = [x for x in split_lines if '<img id="icImg"' in x and '<noscript>' not in x]
-        if len(line_with_images) > 0:
-            preview_regex = re.compile('src=\"(.*?)\"')
-            image_url = preview_regex.search(line_with_images[0]).group(1)
-            if image_url:
-                result.append(re.sub('(-l.*).(jpg|png)', '-l1600.jpg', image_url))
-
+        line_with_images = next(x for x in split_lines if '$vim_C' in x)
+        if line_with_images:
+            json_regex = re.compile('.concat\((.*?)\)</script>')
+            str_json = json_regex.search(line_with_images).group(1)
+            json_object = json.loads(str_json)
+            media_list = json_object['w'][0][2]['model']['mediaList']
+            image_ids = [x['image']['originalImg']['imageId'] for x in media_list]
+            result = [f'https://i.ebayimg.com/images/g/{x}/s-l1600.jpg' for x in image_ids]
         return result
