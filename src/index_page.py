@@ -11,7 +11,7 @@ class IndexPage:
         self.page_content = ''
 
     def _read_file(self):
-        with open(self.index_page_file_path, 'r') as f:
+        with open(self.index_page_file_path, mode='r', encoding='utf-8') as f:
             self.page_content = f.read()
 
     def get_list_of_item_urls_from_index_page(self):
