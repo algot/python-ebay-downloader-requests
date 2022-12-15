@@ -24,7 +24,7 @@ if __name__ == '__main__':
     try:
         filename = (sys.argv[1])
     except IndexError:
-        print('You forgot to specify filename to process. Please try again.')
+        print('You forgot to specify filename to process! Please try again.')
         sys.exit(1)
         
     main(filename)
