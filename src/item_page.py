@@ -36,7 +36,7 @@ class ItemPage:
         sleep(1)
 
         try:
-            with requests.get(self.item_url) as r:
+            with requests.get(self.item_url, params={'_ul': 'EN'}) as r:
                 return r.text
         except Exception as err:
             print(err)
