@@ -77,11 +77,13 @@ class ItemPage:
             str_json_result = json_regex.search(line_with_images)
             if len(str_json_result.groups()) > 0:
                 json_object = json.loads(str_json_result.group(1))
-                model = json_object['w'][0][2]['model']
-                if 'mediaList' in model:
-                    media_list = model['mediaList']
-                    image_ids = [x['image']['originalImg']['imageId'] for x in media_list]
-                    result = [f'https://i.ebayimg.com/images/g/{x}/s-l1600.jpg' for x in image_ids]
+                intermediate_node = json_object['w'][0][2]
+                if 'model' in intermediate_node:
+                    model_node = intermediate_node['model']
+                    if 'mediaList' in model_node:
+                        media_list = model_node['mediaList']
+                        image_ids = [x['image']['originalImg']['imageId'] for x in media_list]
+                        result = [f'https://i.ebayimg.com/images/g/{x}/s-l1600.jpg' for x in image_ids]
 
         if len(result) > len(self.images_urls):
             self.images_urls = result
@@ -97,9 +99,9 @@ class ItemPage:
             str_json_result = json_regex.search(line_with_image)
             if len(str_json_result.groups()) > 0:
                 json_object = json.loads(str_json_result.group(1))
-                model = json_object['w'][0][2]['model']
-                if 'mediaList' in model:
-                    media_list = model['mediaList']
+                model_node = json_object['w'][0][2]['model']
+                if 'mediaList' in model_node:
+                    media_list = model_node['mediaList']
                     image_ids = [x['image']['originalImg']['imageId'] for x in media_list]
                     result = [f'https://i.ebayimg.com/images/g/{x}/s-l1600.jpg' for x in image_ids]
 
