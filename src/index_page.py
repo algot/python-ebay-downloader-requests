@@ -17,7 +17,7 @@ class IndexPage:
     def get_list_of_item_urls_from_index_page(self):
         self._read_file()
 
-        regex = re.compile('https:\/\/\S*\/itm/\S{12}')
+        regex = re.compile(r'https:\/\/\S*\/itm/\S{12}')
 
         item_urls = list(dict.fromkeys(regex.findall(self.page_content)))  # remove duplicates preserving orders
         items_urls_cleaned = [i for i in item_urls if '12345' not in i]

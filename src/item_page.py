@@ -42,7 +42,7 @@ class ItemPage:
             print(err)
 
     def _get_item_title(self):
-        title = re.search('<title>(.*)</title>', self.page_content).group(1)
+        title = re.search(r'<title>(.*)</title>', self.page_content).group(1)
         s = title.replace(' | eBay', '').strip()
         s = s.replace(' ', '_')
         s = re.sub(r'(?u)[^-\w.]', '', s)
@@ -50,7 +50,7 @@ class ItemPage:
         return s.lower()
 
     def _getimages_default_approach(self):
-        regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l1600.jpg')
+        regex = re.compile(r'https://i\.ebayimg\.com/images/g/\S{16}/s-l1600.jpg')
         result = regex.findall(self.page_content)
         if len(result) > len(self.images_urls):
             self.images_urls = result
@@ -60,7 +60,7 @@ class ItemPage:
         split_lines = self.page_content.splitlines()
         line_with_images = [x for x in split_lines if 'mainImgHldr' in x]
         if len(line_with_images) > 0:
-            preview_regex = re.compile('https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
+            preview_regex = re.compile(r'https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
             image_preview_urls = preview_regex.findall(line_with_images[0])
             if image_preview_urls:
                 result = [re.sub('(-l.*).(jpg|png)', '-l1600.jpg', x) for x in image_preview_urls]
@@ -73,7 +73,7 @@ class ItemPage:
         split_lines = self.page_content.splitlines()
         line_with_images = [x for x in split_lines if '$vim_C' in x][0]
         if line_with_images:
-            json_regex = re.compile('.concat\((.*?)\)</script>')
+            json_regex = re.compile(r'.concat\((.*?)\)</script>')
             str_json_result = json_regex.search(line_with_images)
             if len(str_json_result.groups()) > 0:
                 json_object = json.loads(str_json_result.group(1))
@@ -95,7 +95,7 @@ class ItemPage:
         line_with_image_split = line_with_image_raw.split('<script>')  # "p": "PICTURE"
         line_with_image = [x for x in line_with_image_split if '"p":"PICTURE"' in x][0]
         if line_with_image:
-            json_regex = re.compile('.concat\((.*?)\)</script>')
+            json_regex = re.compile(r'.concat\((.*?)\)</script>')
             str_json_result = json_regex.search(line_with_image)
             if len(str_json_result.groups()) > 0:
                 json_object = json.loads(str_json_result.group(1))
