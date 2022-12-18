@@ -62,10 +62,11 @@ class ItemPage:
         split_lines = self.page_content.splitlines()
         line_with_images = [x for x in split_lines if 'mainImgHldr' in x]
         if len(line_with_images) > 0:
-            preview_regex = re.compile(r'https://i\.ebayimg\.com/images/g/\S{16}/s-l\S*')
+            preview_regex = re.compile(r'https://i\.ebayimg\.com/images/g/\S{16}/s-l\S+\.[a-zA-Z]+')
             image_preview_urls = preview_regex.findall(line_with_images[0])
             if image_preview_urls:
                 result = [re.sub('(-l.*).(jpg|png)', '-l1600.jpg', x) for x in image_preview_urls]
+                result = list(dict.fromkeys(result))  # remove duplicates preserving orders
 
         if len(result) > len(self.images_urls):
             self.images_urls = result
