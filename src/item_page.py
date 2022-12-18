@@ -5,6 +5,8 @@ from time import sleep
 
 import requests
 
+from special_chars_parser import parse_string
+
 
 class ItemPage:
     def __init__(self, item_url):
@@ -23,8 +25,8 @@ class ItemPage:
 
         print(f'Number of images on {self.item_id} = {len(self.images_urls)}')
 
-        for i, url in enumerate(self.images_urls):
-            image_filename = f'{count + 1}_{self.item_id}_{self.item_title}_{i + 1}.jpg'
+        for index, url in enumerate(self.images_urls):
+            image_filename = self._get_image_filename(count, index)
             self.item_images[self.item_id].append((image_filename, url))
 
         return self.item_images
@@ -48,6 +50,7 @@ class ItemPage:
         s = s.replace(' ', '_')
         s = re.sub(r'(?u)[^-\w.]', '', s)
         s = s.replace('__', '_')
+        s = parse_string(s)
         return s.lower()
 
     def _getimages_default_approach(self):
@@ -97,3 +100,6 @@ class ItemPage:
 
                 if len(result) > len(self.images_urls):
                     self.images_urls = result
+
+    def _get_image_filename(self, count, index):
+        return f'{count + 1}_{self.item_id}_{self.item_title}_{index + 1}.jpg'
