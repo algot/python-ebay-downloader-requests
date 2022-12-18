@@ -21,6 +21,8 @@ class IndexPage:
 
         item_urls = list(dict.fromkeys(regex.findall(self.page_content)))  # remove duplicates preserving orders
         items_urls_cleaned = [i for i in item_urls if '12345' not in i]
+        items_ids = [i.split('/itm/')[-1] for i in items_urls_cleaned]
+        items_urls_cleaned = [f'https://www.ebay.com/itm/{i}' for i in items_ids]
 
         print(f'Numbers of items found: {len(items_urls_cleaned)}')
 
