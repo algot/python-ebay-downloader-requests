@@ -47,7 +47,7 @@ class ItemPage:
     def _get_item_title(self):
         title = re.search(r'<title>(.*)</title>', self.page_content).group(1)
         s = title.replace(' | eBay', '').strip()
-        s = s.replace(' ', '_')
+        s = s.replace(' ', '-')
         s = re.sub(r'(?u)[^-\w.]', '', s)
         s = s.replace('__', '_')
         s = parse_string(s)
