@@ -76,17 +76,19 @@ class ItemPage:
 
     def _get_images_for_ended_items_multiple_photo(self):
         split_lines = self.page_content.splitlines()
-        line_with_images = [x for x in split_lines if '$vim_C' in x][0]
-        if line_with_images:
-            self._get_images_from_line_with_images_of_ended_item(line_with_images)
+        lines_with_images = [x for x in split_lines if '$vim_C' in x]
+        if lines_with_images:
+            first_line = lines_with_images[0]
+            self._get_images_from_line_with_images_of_ended_item(first_line)
 
     def _get_image_for_ended_items_single_photo(self):
         split_lines = self.page_content.splitlines()
-        line_with_image_raw = [x for x in split_lines if '$vim_C' in x][0]
-        line_with_image_split = line_with_image_raw.split('<script>')  # "p": "PICTURE"
-        line_with_image = [x for x in line_with_image_split if '"p":"PICTURE"' in x][0]
-        if line_with_image:
-            self._get_images_from_line_with_images_of_ended_item(line_with_image)
+        lines_with_image_raw = [x for x in split_lines if '$vim_C' in x]
+        if lines_with_image_raw:
+            line_with_image_split = lines_with_image_raw[0].split('<script>')  # "p": "PICTURE"
+            line_with_image = [x for x in line_with_image_split if '"p":"PICTURE"' in x][0]
+            if line_with_image:
+                self._get_images_from_line_with_images_of_ended_item(line_with_image)
 
     def _get_images_from_line_with_images_of_ended_item(self, line_with_images):
         json_regex = re.compile(r'.concat\((.*?)\)</script>')
