@@ -17,7 +17,7 @@ class ItemPage:
         self.images_urls = []
         self.item_images = {self.item_id: []}
 
-    def get_image_urls(self, count):
+    def get_image_urls(self):
         self._getimages_default_approach()
         self._get_image_case_with_one_active_photo()
         self._get_images_for_ended_items_multiple_photo()
@@ -26,7 +26,7 @@ class ItemPage:
         print(f'Number of images on {self.item_id} = {len(self.images_urls)}')
 
         for index, url in enumerate(self.images_urls):
-            image_filename = self._get_image_filename(count, index)
+            image_filename = self._get_image_filename(index)
             self.item_images[self.item_id].append((image_filename, url))
 
         return self.item_images
@@ -103,5 +103,5 @@ class ItemPage:
                 if len(result) > len(self.images_urls):
                     self.images_urls = result
 
-    def _get_image_filename(self, count, index):
-        return f'{count + 1}_{self.item_id}_{self.item_title}_{index + 1}.jpg'
+    def _get_image_filename(self, index):
+        return f'{self.item_id}_{self.item_title}_{index + 1}.jpg'

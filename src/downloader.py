@@ -3,7 +3,6 @@ from pathlib import Path
 from time import sleep
 
 import requests
-from alive_progress import alive_bar
 
 
 def download(input_filename, files_to_download):
@@ -12,10 +11,8 @@ def download(input_filename, files_to_download):
     if not os.path.isdir(directory):
         os.makedirs(directory)
 
-    with alive_bar(len(files_to_download), title='Download images', spinner='dots') as bar:
-        for item in files_to_download:
-            _download_file(directory, item)
-            bar()
+    for item in files_to_download:
+        _download_file(directory, item)
 
 
 def _download_file(directory, item):
